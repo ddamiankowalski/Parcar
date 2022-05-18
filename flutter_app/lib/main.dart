@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
@@ -10,11 +11,16 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Container(
       decoration: BoxDecoration(color: Color.fromARGB(255, 255, 255, 255)),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Expanded(
-          flex: 12,
+          flex: 22,
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Stack(
@@ -71,24 +77,24 @@ class SocialMediaSignIn extends StatelessWidget {
                     alignment: Alignment.center,
                     height: 48,
                     width: 48,
-                    child: Icon(
-                      FontAwesomeIcons.google,
-                      size: 20,
-                      color: Color.fromARGB(255, 66, 133, 244),
+                    child: Image.asset(
+                      'lib/img/google.jpg',
+                      height: 24.0,
+                      fit: BoxFit.cover,
                     )),
                 SizedBox(width: 35),
                 Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Color.fromARGB(255, 66, 103, 178),
+                      color: Color.fromARGB(255, 24, 119, 242),
                     ),
                     alignment: Alignment.center,
                     height: 48,
                     width: 48,
-                    child: Icon(
-                      FontAwesomeIcons.facebookF,
-                      size: 20,
-                      color: Color.fromARGB(255, 255, 255, 255),
+                    child: Image.asset(
+                      'lib/img/facebook.png',
+                      height: 24.0,
+                      fit: BoxFit.cover,
                     ))
               ],
             ),
@@ -97,8 +103,8 @@ class SocialMediaSignIn extends StatelessWidget {
               'Sign in through social media',
               style: TextStyle(
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
                   color: Color.fromARGB(255, 85, 74, 240)),
             )
           ],
@@ -135,46 +141,78 @@ class ButtonSection extends StatelessWidget {
             FractionallySizedBox(
               widthFactor: 0.8,
               child: Container(
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color.fromARGB(255, 85, 74, 240),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Text(
-                      'Sign In',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color.fromARGB(255, 255, 255, 255)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Color.fromARGB(255, 85, 74, 240),
+                ),
+                child: Material(
+                  child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  )),
+                    onTap: () {
+                      print('pressed');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'Sign In',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 255, 255, 255)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  color: Colors.transparent,
+                ),
+              ),
             ),
             SizedBox(height: 20),
             FractionallySizedBox(
               widthFactor: 0.8,
               child: Container(
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color.fromARGB(255, 248, 248, 250),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Text(
-                      'Sign Up',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color.fromARGB(255, 85, 74, 240)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Color.fromARGB(255, 248, 248, 250),
+                ),
+                child: Material(
+                  child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  )),
-            )
+                    onTap: () {
+                      print('pressed');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'Sign Up',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 85, 74, 240)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
           ],
         ));
   }
@@ -191,38 +229,129 @@ class MainMessage extends StatelessWidget {
         Expanded(
             child: Container(
           width: double.infinity,
-          height: 330,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("lib/img/BG.jpg"), fit: BoxFit.cover)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: RichText(
-                    text: TextSpan(
-                        children: <TextSpan>[
-                      TextSpan(text: 'Welcome to '),
-                      TextSpan(
-                          text: 'Parcar',
-                          style: const TextStyle(fontWeight: FontWeight.w800)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'lib/img/logo.png',
+                    height: 30.0,
+                    fit: BoxFit.cover,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0, right: 15.0),
+                    child: RichText(
+                        text: TextSpan(
+                            children: <TextSpan>[
+                          TextSpan(text: 'Par'),
+                          TextSpan(
+                              text: 'car',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w400)),
+                        ],
+                            style: const TextStyle(
+                                fontSize: 32,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w800,
+                                color: Color.fromARGB(255, 238, 237, 254)))),
+                  ),
+                ],
+              ),
+              Container(
+                  margin: const EdgeInsets.only(top: 60),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            '1317',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                                color: Color.fromARGB(255, 238, 237, 254)),
+                          ),
+                          Text(
+                            'WARSAW',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                color: Color.fromARGB(255, 204, 201, 251)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 50),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '202',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                                color: Color.fromARGB(255, 238, 237, 254)),
+                          ),
+                          Text(
+                            'POZNAN',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                color: Color.fromARGB(255, 204, 201, 251)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 50),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '525',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                                color: Color.fromARGB(255, 238, 237, 254)),
+                          ),
+                          Text(
+                            'LOS ANGELES',
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                color: Color.fromARGB(255, 204, 201, 251)),
+                          ),
+                        ],
+                      )
                     ],
-                        style: const TextStyle(
-                            fontSize: 32,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromARGB(255, 238, 237, 254)))),
-              ),
-              Text(
-                'A new and modern way to park your car',
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: Color.fromARGB(255, 204, 201, 251)),
-              ),
+                  )),
+              SizedBox(height: 30),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  'Free parking spots from around the world',
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 10,
+                      color: Color.fromARGB(255, 204, 201, 251)),
+                ),
+              )
             ],
           ),
         )),
