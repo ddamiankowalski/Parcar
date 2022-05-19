@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 void main() {
-  runApp(MainView());
+  runApp(MaterialApp(home: LoadingScreen()));
 }
 
-class MainView extends StatelessWidget {
+class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
 
+  @override
+  _MainView createState() => _MainView();
+}
+
+class _MainView extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -99,14 +106,15 @@ class SocialMediaSignIn extends StatelessWidget {
               ],
             ),
             SizedBox(height: 25),
-            Text(
-              'Sign in through social media',
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                  color: Color.fromARGB(255, 85, 74, 240)),
-            )
+            DefaultTextStyle(
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 85, 74, 240)),
+                child: Text(
+                  'Sign in through social media',
+                ))
           ],
         ));
   }
@@ -117,14 +125,17 @@ class ForgotPasswordText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Forgot your password?',
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
+    return DefaultTextStyle(
         style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w500,
             fontSize: 14,
-            color: Color.fromARGB(255, 85, 74, 240)));
+            color: Color.fromARGB(255, 85, 74, 240)),
+        child: Text(
+          'Forgot your password?',
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+        ));
   }
 }
 
@@ -151,7 +162,11 @@ class ButtonSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     onTap: () {
-                      print('pressed');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoadingScreen()),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -218,12 +233,18 @@ class ButtonSection extends StatelessWidget {
   }
 }
 
-class MainMessage extends StatelessWidget {
-  const MainMessage({Key? key}) : super(key: key);
+class MainMessage extends StatefulWidget {
+  const MainMessage({Key? key});
 
   @override
+  _MainMessage createState() => _MainMessage();
+}
+
+class _MainMessage extends State<MainMessage> {
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+        body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
@@ -240,11 +261,11 @@ class MainMessage extends StatelessWidget {
                 children: [
                   Image.asset(
                     'lib/img/logo.png',
-                    height: 30.0,
+                    height: 35,
                     fit: BoxFit.cover,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, right: 15.0),
+                    padding: const EdgeInsets.only(bottom: 5.0, right: 18.0),
                     child: RichText(
                         text: TextSpan(
                             children: <TextSpan>[
@@ -255,7 +276,7 @@ class MainMessage extends StatelessWidget {
                                   const TextStyle(fontWeight: FontWeight.w400)),
                         ],
                             style: const TextStyle(
-                                fontSize: 32,
+                                fontSize: 36,
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w800,
                                 color: Color.fromARGB(255, 238, 237, 254)))),
@@ -355,8 +376,50 @@ class MainMessage extends StatelessWidget {
             ],
           ),
         )),
-        SizedBox(height: 70)
+        Container(
+          height: 70,
+          width: double.infinity,
+          child: DecoratedBox(decoration: BoxDecoration(color: Colors.white)),
+        )
       ],
+    ));
+  }
+}
+
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({Key? key}) : super(key: key);
+
+  _LoadingScreen createState() => _LoadingScreen();
+}
+
+class _LoadingScreen extends State<LoadingScreen> {
+  @override
+  void initState() {
+    _fetchFromBackend();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('data'),
+      ),
     );
+  }
+
+  void _fetchFromBackend() async {
+    final Dio dio = new Dio();
+
+    try {
+      var response = await dio.get("http://10.0.2.2:3000/api/users");
+      print(response.statusCode);
+      print(response.data);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: ((context) => const MainView())));
+    } on DioError catch (e) {
+      print(e);
+    }
   }
 }
