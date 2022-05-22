@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'Poppins'),
       title: 'Parcar',
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
@@ -37,18 +38,25 @@ class MainScreen extends StatelessWidget {
 
 Widget topStack() {
   return Stack(
+    alignment: Alignment.center,
     children: <Widget>[
       Column(
         children: <Widget>[
-          Expanded(flex: 9, child: topTextStack()),
+          Expanded(flex: 7, child: topTextStack()),
           Expanded(
             flex: 1,
             child: Container(
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
+      Positioned(
+          bottom: 0,
+          child: Align(
+            alignment: Alignment.center,
+            child: socialMediaIcons(),
+          ))
     ],
   );
 }
@@ -57,15 +65,189 @@ Widget topTextStack() {
   return Stack(
     children: <Widget>[
       Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/topbg.png"), fit: BoxFit.cover)),
+        color: primaryColor,
       ),
-      const Positioned.fill(
+      Positioned.fill(
           child: Align(
-        alignment: Alignment.center,
-        child: Text('dsadasdass'),
-      ))
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        'assets/logo.svg',
+                        semanticsLabel: 'Parcar Logo',
+                        height: 22,
+                      ),
+                      const SizedBox(width: 10),
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: 'Par'),
+                            TextSpan(
+                                text: 'car',
+                                style: TextStyle(fontWeight: FontWeight.w200)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                      constraints: const BoxConstraints(maxWidth: 300),
+                      child: RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: 'Find yourself a perfect spot to '),
+                            TextSpan(
+                                text: 'parc!',
+                                style: TextStyle(fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      )),
+                  const SizedBox(height: 70),
+                  currentParkingSpaces(),
+                ],
+              ))),
+    ],
+  );
+}
+
+Widget socialMediaIcons() {
+  return Column(
+    children: <Widget>[
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: const Color.fromARGB(255, 24, 119, 242)),
+              width: 48,
+              height: 48,
+              child: Center(
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  child: SvgPicture.asset(
+                    'assets/facebook.svg',
+                    semanticsLabel: 'facebook',
+                  ),
+                ),
+              )),
+          const SizedBox(width: 40),
+          Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: const Color.fromARGB(255, 255, 255, 255)),
+              width: 48,
+              height: 48,
+              child: Center(
+                child: Container(
+                  width: 23,
+                  height: 23,
+                  child: SvgPicture.asset(
+                    'assets/google.svg',
+                    semanticsLabel: 'google',
+                  ),
+                ),
+              )),
+          const SizedBox(width: 40),
+          Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: const Color.fromARGB(255, 29, 161, 242)),
+              width: 48,
+              height: 48,
+              child: Center(
+                child: Container(
+                  width: 24,
+                  height: 20,
+                  child: SvgPicture.asset(
+                    'assets/twitter.svg',
+                    semanticsLabel: 'twitter',
+                  ),
+                ),
+              ))
+        ],
+      ),
+      const SizedBox(height: 25),
+      Text(
+        'Sign in through social media',
+        style: TextStyle(
+          fontSize: 12,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w300,
+          color: primaryColor,
+        ),
+      )
+    ],
+  );
+}
+
+Widget currentParkingSpaces() {
+  return Row(
+    children: <Widget>[
+      const Spacer(),
+      Column(
+        children: const <Widget>[
+          Text('524',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white)),
+          Text('POZNAN',
+              style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white))
+        ],
+      ),
+      const Spacer(),
+      Column(
+        children: const <Widget>[
+          Text('2562',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white)),
+          Text('LOS ANGELES',
+              style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white))
+        ],
+      ),
+      const Spacer(),
+      Column(
+        children: const <Widget>[
+          Text('962',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white)),
+          Text('PRAGUE',
+              style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white))
+        ],
+      ),
+      const Spacer(),
     ],
   );
 }
