@@ -42,12 +42,10 @@ Widget topStack() {
     children: <Widget>[
       Column(
         children: <Widget>[
-          Expanded(flex: 7, child: topTextStack()),
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.white,
-            ),
+          Expanded(flex: 1, child: topTextStack()),
+          Container(
+            color: Colors.white,
+            height: 60,
           ),
         ],
       ),
@@ -191,7 +189,7 @@ Widget socialMediaIcons() {
         style: TextStyle(
           fontSize: 12,
           fontFamily: 'Poppins',
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w500,
           color: primaryColor,
         ),
       )
@@ -254,8 +252,36 @@ Widget currentParkingSpaces() {
 
 Widget bottomSection() {
   return Container(
-    color: Colors.white,
-  );
+      width: double.infinity,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FractionallySizedBox(
+            widthFactor: 0.7,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: Colors.red,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: () {
+                      print('pressed!');
+                    },
+                    child: const Padding(
+                        padding: EdgeInsets.only(top: 17, bottom: 17),
+                        child: Text('Sign in',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white)))),
+              ),
+            ),
+          )
+        ],
+      ));
 }
 
 Color primaryColor = const Color.fromARGB(255, 85, 74, 240);
