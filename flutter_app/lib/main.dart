@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +30,7 @@ class MainScreen extends StatelessWidget {
         Expanded(flex: 3, child: topStack()),
         Expanded(
           flex: 2,
-          child: bottomSection(),
+          child: bottomSection(context),
         )
       ],
     ));
@@ -41,33 +42,120 @@ Widget topStack() {
     alignment: Alignment.center,
     children: <Widget>[
       Column(
-        children: <Widget>[
-          Expanded(flex: 1, child: topTextStack()),
-          Container(
-            color: Colors.white,
-            height: 60,
-          ),
-        ],
+        children: const <Widget>[Expanded(flex: 1, child: TopTextStack())],
       ),
-      Positioned(
-          bottom: 0,
-          child: Align(
-            alignment: Alignment.center,
-            child: socialMediaIcons(),
-          ))
     ],
   );
 }
 
-Widget topTextStack() {
-  return Stack(
-    children: <Widget>[
-      Container(
-        color: primaryColor,
-      ),
-      Positioned.fill(
-          child: Align(
-              alignment: Alignment.center,
+class TopTextStack extends StatefulWidget {
+  const TopTextStack({Key? key}) : super(key: key);
+
+  @override
+  _TopTextStack createState() => _TopTextStack();
+}
+
+class CustomBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
+  }
+}
+
+class _TopTextStack extends State<TopTextStack> {
+  int _index = 0;
+  bool _dragStart = false;
+
+  final PageController _controller = PageController();
+
+  @override
+  void initState() {
+    Timer mytimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (!_dragStart) {
+        setState(() {
+          _index > 1 ? _index = 0 : _index++;
+        });
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_controller.hasClients) {
+      _controller.animateToPage(
+          _index == 0 && _dragStart == false ? _controller.initialPage : _index,
+          duration: Duration(milliseconds: _index == 0 ? 1500 : 1000),
+          curve: Curves.easeInOut);
+    }
+
+    return GestureDetector(
+      onTapDown: (details) {
+        setState(() {
+          _dragStart = true;
+        });
+      },
+      onLongPressDown: (details) {
+        setState(() {
+          _dragStart = true;
+        });
+      },
+      onTapUp: (details) {
+        setState(() {
+          _dragStart = false;
+        });
+      },
+      onLongPressUp: () {
+        setState(() {
+          _dragStart = false;
+        });
+      },
+      child: Stack(
+        children: <Widget>[
+          Container(
+              color: primaryColor,
+              child: PageView(
+                controller: _controller,
+                onPageChanged: (value) {
+                  if (_dragStart) {
+                    setState(() {
+                      _index = value;
+                      _dragStart = false;
+                    });
+                  }
+                },
+                allowImplicitScrolling: true,
+                children: <Widget>[
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.1),
+                                  BlendMode.dstATop),
+                              image: const AssetImage("assets/poznan.jpg"),
+                              fit: BoxFit.cover))),
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.1),
+                                  BlendMode.dstATop),
+                              image: const AssetImage("assets/la.jpg"),
+                              fit: BoxFit.cover))),
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.1),
+                                  BlendMode.dstATop),
+                              image: const AssetImage("assets/prague.jpg"),
+                              fit: BoxFit.cover))),
+                ],
+              )),
+          IgnorePointer(
+              ignoring: true,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -78,6 +166,7 @@ Widget topTextStack() {
                         'assets/logo.svg',
                         semanticsLabel: 'Parcar Logo',
                         height: 22,
+                        color: Colors.white70,
                       ),
                       const SizedBox(width: 10),
                       RichText(
@@ -118,131 +207,153 @@ Widget topTextStack() {
                         ),
                       )),
                   const SizedBox(height: 70),
-                  currentParkingSpaces(),
+                  currentParkingSpaces(_index),
                 ],
-              ))),
-    ],
-  );
-}
-
-Widget socialMediaIcons() {
-  return Column(
-    children: <Widget>[
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: const Color.fromARGB(255, 24, 119, 242)),
-              width: 48,
-              height: 48,
-              child: Center(
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  child: SvgPicture.asset(
-                    'assets/facebook.svg',
-                    semanticsLabel: 'facebook',
-                  ),
-                ),
               )),
-          const SizedBox(width: 40),
-          Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: const Color.fromARGB(255, 255, 255, 255)),
-              width: 48,
-              height: 48,
-              child: Center(
-                child: Container(
-                  width: 23,
-                  height: 23,
-                  child: SvgPicture.asset(
-                    'assets/google.svg',
-                    semanticsLabel: 'google',
-                  ),
-                ),
-              )),
-          const SizedBox(width: 40),
-          Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: const Color.fromARGB(255, 29, 161, 242)),
-              width: 48,
-              height: 48,
-              child: Center(
-                child: Container(
-                  width: 24,
-                  height: 20,
-                  child: SvgPicture.asset(
-                    'assets/twitter.svg',
-                    semanticsLabel: 'twitter',
-                  ),
-                ),
-              ))
+          Positioned.fill(
+            bottom: 20,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: sliderIcons(_index),
+            ),
+          )
         ],
       ),
-      const SizedBox(height: 25),
-      Text(
-        'Sign in through social media',
-        style: TextStyle(
-          fontSize: 12,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w500,
-          color: primaryColor,
+    );
+  }
+}
+
+Widget sliderIcons(index) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 15),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 7,
+          height: 7,
+          decoration: BoxDecoration(
+              color: index == 0 ? Colors.white : Colors.white54,
+              shape: BoxShape.circle),
         ),
-      )
-    ],
+        const SizedBox(width: 15),
+        Container(
+          width: 7,
+          height: 7,
+          decoration: BoxDecoration(
+              color: index == 1 ? Colors.white : Colors.white54,
+              shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 15),
+        Container(
+          width: 7,
+          height: 7,
+          decoration: BoxDecoration(
+              color: index == 2 ? Colors.white : Colors.white54,
+              shape: BoxShape.circle),
+        )
+      ],
+    ),
   );
 }
 
-Widget currentParkingSpaces() {
+Widget currentParkingSpaces(index) {
   return Row(
     children: <Widget>[
       const Spacer(),
       Column(
-        children: const <Widget>[
-          Text('524',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white)),
-          Text('POZNAN',
-              style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white))
+        children: <Widget>[
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 0
+                ? const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white54),
+            child: const Text('524'),
+          ),
+          const SizedBox(height: 10),
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 0
+                ? const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white54),
+            child: const Text('POZNAN'),
+          ),
         ],
       ),
       const Spacer(),
       Column(
-        children: const <Widget>[
-          Text('2562',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white)),
-          Text('LOS ANGELES',
-              style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white))
+        children: <Widget>[
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 1
+                ? const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white54),
+            child: const Text('2562'),
+          ),
+          const SizedBox(height: 10),
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 1
+                ? const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white54),
+            child: const Text('LOS ANGELES'),
+          ),
         ],
       ),
       const Spacer(),
       Column(
-        children: const <Widget>[
-          Text('962',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white)),
-          Text('PRAGUE',
-              style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white))
+        children: <Widget>[
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 2
+                ? const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white54),
+            child: const Text('962'),
+          ),
+          const SizedBox(height: 10),
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 120),
+            style: index == 2
+                ? const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white)
+                : const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white54),
+            child: const Text('PRAGUE'),
+          ),
         ],
       ),
       const Spacer(),
@@ -250,7 +361,7 @@ Widget currentParkingSpaces() {
   );
 }
 
-Widget bottomSection() {
+Widget bottomSection(context) {
   return Container(
       width: double.infinity,
       color: Colors.white,
@@ -258,30 +369,164 @@ Widget bottomSection() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FractionallySizedBox(
-            widthFactor: 0.7,
+            widthFactor: 0.8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/facebook.svg',
+                          semanticsLabel: 'Facebook',
+                          height: 18,
+                          color: const Color.fromARGB(255, 66, 103, 178),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Padding(
+                            padding: EdgeInsets.only(top: 18, bottom: 18),
+                            child: Text('Sign in with Facebook',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)))
+                      ],
+                    )),
+                const SizedBox(
+                  width: 20,
+                ),
+                Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/google.svg',
+                          semanticsLabel: 'Parcar Logo',
+                          height: 18,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Padding(
+                            padding: EdgeInsets.only(top: 18, bottom: 18),
+                            child: Text('Sign in with Google',
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)))
+                      ],
+                    )),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 35,
+          ),
+          FractionallySizedBox(
+            widthFactor: 0.8,
             child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.red,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                color: primaryColor,
               ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     onTap: () {
-                      print('pressed!');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInPage()));
                     },
                     child: const Padding(
-                        padding: EdgeInsets.only(top: 17, bottom: 17),
+                        padding: EdgeInsets.only(top: 18, bottom: 18),
                         child: Text('Sign in',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white)))),
               ),
             ),
-          )
+          ),
+          const SizedBox(height: 20),
+          FractionallySizedBox(
+            widthFactor: 0.8,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                color: Color.fromARGB(255, 248, 248, 250),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    onTap: () {
+                      print('pressed!');
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.only(top: 18, bottom: 18),
+                        child: Text('Sign up',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor)))),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          Text(
+            'Forgot your password?',
+            style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500),
+          ),
         ],
       ));
+}
+
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
+
+  @override
+  _SignInPage createState() => _SignInPage();
+}
+
+class _SignInPage extends State<SignInPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate back to first route when tapped.
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
+  }
 }
 
 Color primaryColor = const Color.fromARGB(255, 85, 74, 240);
