@@ -27,7 +27,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
         body: Column(
       children: <Widget>[
-        Expanded(flex: 3, child: topStack()),
+        Expanded(flex: 2, child: topStack()),
         Expanded(
           flex: 2,
           child: bottomSection(context),
@@ -84,141 +84,70 @@ class _TopTextStack extends State<TopTextStack> {
 
   @override
   Widget build(BuildContext context) {
-    if (_controller.hasClients) {
-      _controller.animateToPage(
-          _index == 0 && _dragStart == false ? _controller.initialPage : _index,
-          duration: Duration(milliseconds: _index == 0 ? 1500 : 1000),
-          curve: Curves.easeInOut);
-    }
-
-    return GestureDetector(
-      onTapDown: (details) {
-        setState(() {
-          _dragStart = true;
-        });
-      },
-      onLongPressDown: (details) {
-        setState(() {
-          _dragStart = true;
-        });
-      },
-      onTapUp: (details) {
-        setState(() {
-          _dragStart = false;
-        });
-      },
-      onLongPressUp: () {
-        setState(() {
-          _dragStart = false;
-        });
-      },
-      child: Stack(
-        children: <Widget>[
-          Container(
-              color: primaryColor,
-              child: PageView(
-                controller: _controller,
-                onPageChanged: (value) {
-                  if (_dragStart) {
-                    setState(() {
-                      _index = value;
-                      _dragStart = false;
-                    });
-                  }
-                },
-                allowImplicitScrolling: true,
-                children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.1),
-                                  BlendMode.dstATop),
-                              image: const AssetImage("assets/poznan.jpg"),
-                              fit: BoxFit.cover))),
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.1),
-                                  BlendMode.dstATop),
-                              image: const AssetImage("assets/la.jpg"),
-                              fit: BoxFit.cover))),
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.1),
-                                  BlendMode.dstATop),
-                              image: const AssetImage("assets/prague.jpg"),
-                              fit: BoxFit.cover))),
-                ],
-              )),
-          IgnorePointer(
-              ignoring: true,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        'assets/logo.svg',
-                        semanticsLabel: 'Parcar Logo',
-                        height: 22,
-                        color: Colors.white70,
+    return Stack(
+      children: <Widget>[
+        Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/la.jpg"), fit: BoxFit.cover))),
+        IgnorePointer(
+            ignoring: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      'assets/logo.svg',
+                      semanticsLabel: 'Parcar Logo',
+                      height: 25,
+                      color: primaryColor,
+                    ),
+                    const SizedBox(width: 10),
+                    RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(text: 'Par'),
+                          TextSpan(
+                              text: 'car',
+                              style: TextStyle(fontWeight: FontWeight.w600)),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(text: 'Par'),
-                            TextSpan(
-                                text: 'car',
-                                style: TextStyle(fontWeight: FontWeight.w200)),
-                          ],
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                    constraints: const BoxConstraints(maxWidth: 300),
+                    child: RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                      constraints: const BoxConstraints(maxWidth: 300),
-                      child: RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                        children: <TextSpan>[
+                          TextSpan(text: 'Find yourself a perfect spot to '),
+                          TextSpan(
+                            text: 'parc!',
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          children: <TextSpan>[
-                            TextSpan(text: 'Find yourself a perfect spot to '),
-                            TextSpan(
-                                text: 'parc!',
-                                style: TextStyle(fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      )),
-                  const SizedBox(height: 70),
-                  currentParkingSpaces(_index),
-                ],
-              )),
-          Positioned.fill(
-            bottom: 20,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: sliderIcons(_index),
-            ),
-          )
-        ],
-      ),
+                        ],
+                      ),
+                    )),
+
+                //currentParkingSpaces(_index),
+              ],
+            )),
+      ],
     );
   }
 }
@@ -366,7 +295,7 @@ Widget bottomSection(context) {
       width: double.infinity,
       color: Colors.white,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           FractionallySizedBox(
             widthFactor: 0.8,
@@ -431,69 +360,67 @@ Widget bottomSection(context) {
               ],
             ),
           ),
-          const SizedBox(
-            height: 35,
-          ),
-          FractionallySizedBox(
-            widthFactor: 0.8,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                color: primaryColor,
+          Column(
+            children: <Widget>[
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    color: primaryColor,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignInPage()));
+                        },
+                        child: const Padding(
+                            padding: EdgeInsets.only(top: 18, bottom: 18),
+                            child: Text('Sign in',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white)))),
+                  ),
+                ),
               ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    customBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInPage()));
-                    },
-                    child: const Padding(
-                        padding: EdgeInsets.only(top: 18, bottom: 18),
-                        child: Text('Sign in',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white)))),
+              const SizedBox(height: 20),
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    color: Color.fromARGB(255, 248, 248, 250),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        onTap: () {
+                          print('pressed!');
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.only(top: 18, bottom: 18),
+                            child: Text('Sign up',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: primaryColor)))),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          FractionallySizedBox(
-            widthFactor: 0.8,
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: Color.fromARGB(255, 248, 248, 250),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    customBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    onTap: () {
-                      print('pressed!');
-                    },
-                    child: Padding(
-                        padding: const EdgeInsets.only(top: 18, bottom: 18),
-                        child: Text('Sign up',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: primaryColor)))),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 40,
+            ],
           ),
           Text(
             'Forgot your password?',
