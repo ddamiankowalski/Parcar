@@ -1,6 +1,7 @@
 const express = require("express");
 const uuid = require('uuid');
 const db = require('./connection');
+const crypto = require('crypto');
 
 const router = express.Router();
 
@@ -34,12 +35,27 @@ const getUser = async (userId) => {
 }
 
 const logIn = async (username, password) => {
-    return { username: username, password: 'password' }
+    return { name: username, password: 'password' }
+}
+
+const registerUser = async (email, password) => {
+    const sql = `INSERT INTO users (id, email, pw_hash) VALUES ('${generateUUID()}', '${email}', '${generatePasswordHash(password)}')`;
+    await db.query(sql);
+}
+
+const generatePasswordHash = (password) => {
+    const hashingSecret = "ParcarSecret_hash";
+    const hashedPassword = crypto.createHmac('sha256', hashingSecret)
+                                .update(password)
+                                .digest('hex');
+
+    return hashedPassword;
 }
 
 module.exports = {
     getAllUsers,
     newUser,
     getUser,
-    logIn
+    logIn,
+    registerUser
 };
