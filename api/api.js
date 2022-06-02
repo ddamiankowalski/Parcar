@@ -1,6 +1,7 @@
 const express = require('express');
 const dbutils = require('../database/dbutils');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 /* getAllUsers functionality, returns all users from the database in JSON format */
 
@@ -36,6 +37,33 @@ router.post("/user", async (req, res) => {
     try {
         await dbutils.newUser(userData.firstName, userData.lastName, userData.email, userData.age);
         res.sendStatus(res.statusCode);
+    } catch (err) {
+        const errObj = {
+            status: "failure",
+            message: err.message
+        }
+        res.send(errObj);
+    }
+})
+
+
+/* signIn functionality, allows a user to sign in and exchange jwt */
+
+router.post("/signin", async(req, res) => {
+    const loginInfo = req.body;
+
+    try {
+        const user = await dbutils.logIn(loginInfo.username, loginInfo.password);
+
+        if(!user) {
+            return {
+                status: "failure",
+                message: "The creditentials are incorrect"
+            }
+        }
+
+        const accessToken = jwt.sign(user.username, process.env.ACCESS_TOKEN_SECRET);
+        res.json({ accessToken: accessToken });
     } catch (err) {
         const errObj = {
             status: "failure",

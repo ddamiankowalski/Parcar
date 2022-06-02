@@ -13,11 +13,7 @@ app.use(
 );
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-});
-
-app.get("/", (req, res) => {
-    res.json({ message: "ok" });
+    console.log(`The application has started listening on port: ${port}`);
 });
 
 

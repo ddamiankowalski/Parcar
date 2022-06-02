@@ -33,8 +33,13 @@ const getUser = async (userId) => {
     return data[0];
 }
 
+const logIn = async (username, password) => {
+    return { username: username, password: 'password' }
+}
+
 module.exports = {
     getAllUsers,
     newUser,
-    getUser
+    getUser,
+    logIn
 };
